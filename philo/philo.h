@@ -6,7 +6,7 @@
 /*   By: imontero <imontero@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 16:14:30 by imontero          #+#    #+#             */
-/*   Updated: 2023/09/22 13:57:20 by imontero         ###   ########.fr       */
+/*   Updated: 2023/09/24 11:39:29 by imontero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,22 @@
 # include <sys/time.h>
 # include <unistd.h>
 
-#define PHILMAX 250
-#define ALIVE 0
-#define	DEAD 1
+# define PHILMAX 250
+# define HASFORK 0
+# define ISEATING 1
+# define ISSLEEPING 2
+# define ISTHINKING 3
+# define HASDIED 4
+# define ALIVE 0
+# define DEAD 1
+# define RED	"\033[0;31m"
+# define GREEN	"\033[0;32m"
+# define YELLOW	"\033[0;33m"
+# define BLUE 	"\033[0;34m"
+# define PURPLE	"\033[0;35m"
+# define CYAN	"\033[0;36m"
+# define BOLD	"\033[0;1m"
+# define X		"\033[0;0m"
 
 
 typedef struct s_philos
@@ -53,7 +66,7 @@ int		ft_usleep(size_t milliseconds);
 size_t	get_current_time(void);
 int		ft_atoi(const char *str);
 int		ft_isdigit(int c);
-void	ft_prints(t_philos *ph, char *s);
+void	ft_prints(t_philos *ph, int i);
 int		check_args(char **av);
 void	ft_eat(t_philos *ph);
 void	ft_sleep(t_philos *ph);

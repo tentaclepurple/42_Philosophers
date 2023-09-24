@@ -6,13 +6,36 @@
 /*   By: imontero <imontero@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 17:32:12 by imontero          #+#    #+#             */
-/*   Updated: 2023/09/22 13:59:55 by imontero         ###   ########.fr       */
+/*   Updated: 2023/09/24 11:40:10 by imontero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
 void	ft_eat(t_philos *ph)
+{
+	pthread_mutex_lock(ph->fork_l);
+	ft_prints(ph, HASFORK);
+	pthread_mutex_lock(ph->fork_r);
+	ft_prints(ph, HASFORK);
+	ft_prints(ph, ISEATING);
+	ft_usleep(ph->c_time_2_eat);
+	pthread_mutex_unlock(ph->fork_l);
+	pthread_mutex_unlock(ph->fork_r);
+}
+
+void	ft_sleep(t_philos *ph)
+{
+	ft_prints(ph, ISSLEEPING);
+	ft_usleep(ph->c_time_2_slp);
+}
+
+void	ft_think(t_philos *ph)
+{
+	ft_prints(ph, ISTHINKING);
+}
+
+/*void	ft_eat(t_philos *ph)
 {
 	pthread_mutex_lock(ph->fork_l);
 	ft_prints(ph, "has taken a fork");
@@ -34,7 +57,7 @@ void	ft_think(t_philos *ph)
 {
 	ft_prints(ph, "is thinking");
 }
-
+*/
 
 
 /*void	*philo_routine(void *pointer)

@@ -14,8 +14,8 @@ NAME = 				philo
 
 CC = 				gcc
 
-#CFLAGS =			-g3 -Wall -Werror -Wextra #-fsanitize=address 
-CFLAGS =			-g3 -Wall -Werror -Wextra -fsanitize=thread
+CFLAGS =			-g3 -Wall -Werror -Wextra -fsanitize=address 
+#CFLAGS =			-g3 -Wall -Werror -Wextra -fsanitize=thread
 
 SRC_FILES =			philo.c \
 					inits.c \
@@ -23,27 +23,45 @@ SRC_FILES =			philo.c \
 			 		utils.c \
 					utils2.c \
 					routines.c \
-					
-				
 		
 INCLUDE = 			philo.h
 
-OBJS = $(SRC_FILES:.c=.o)
-
 #.c.o: $(SRCS)
 #	$(CC) $(CFLAGS) $(SRCS) -c $(OBJS) -o
+CLR_RMV		:= \033[0m
+RED		    := \033[1;31m
+GREEN		:= \033[1;32m
+YELLOW		:= \033[1;33m
+BLUE		:= \033[1;34m
+CYAN 		:= \033[1;36m
+
+define	ART
+$(YELLOW)
+_______ _   _ ___          _________ ___ _______ _   _ _____ __________ 
+(   _   ) | | (   )   /\   / _ \  ___) _ (   _   ) | | |  ___)  _ \  ___)
+ | | | || |_| || |   /  \ | | | \ \ | | | | | | || |_| | |_  | |_) ) \   
+ | | | ||  _  || |  / /\ \| | | |> >| | | | | | ||  _  |  _) |  __/ > >  
+ | | | || | | || | / /  \ \ |_| / /_| |_| | | | || | | | |___| |   / /__ 
+ |_| |_||_| |_(___)_/    \_\___/_____)___/|_| |_||_| |_|_____)_|  /_____)
+ $(CLR_RMV)
+endef
+export	ART
+.c.o:
+	@$(CC) $(CFLAGS) -c $< -o $@
+
+OBJS = $(SRC_FILES:.c=.o)
 
 all: $(NAME)
 
-
 $(NAME): $(OBJS) $(INCLUDE)
-	$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
+	@$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
+	@echo "$$ART"
 	
 clean:
-	rm -f $(OBJS)
+	@rm -f $(OBJS)
 
 fclean: clean
-	rm -f $(NAME) 
+	@rm -f $(NAME) 
 
 re: fclean all
 
