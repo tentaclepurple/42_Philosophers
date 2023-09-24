@@ -6,7 +6,7 @@
 /*   By: imontero <imontero@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 17:22:16 by imontero          #+#    #+#             */
-/*   Updated: 2023/09/22 14:00:36 by imontero         ###   ########.fr       */
+/*   Updated: 2023/09/24 20:05:57 by imontero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,20 @@ void	*philo_routine(void *pointer)
 	ph = (t_philos *)pointer;
 	//printf("id: %i", ph->philo_id);
 	if (ph->philo_id % 2 != 0)
-		ft_usleep(5);
-	int i = 0;
-	while(i < 4)
+		ft_usleep(1);
+	//int i = 0;
+	while(ph->ending_flag == CONTINUE)
 	{
+		if (ph->ending_flag == END)
+			return (0);
 		ft_eat(ph);
+		if (ph->ending_flag == END)
+			return (0);
 		ft_sleep(ph);
+		if (ph->ending_flag == END)
+			return (0);
 		ft_think(ph);
-		i++;
+		//i++;
 	}
 	return (pointer);
 }
@@ -34,13 +40,14 @@ void	*philo_routine(void *pointer)
 void	*watcher_routine(void *pointer)
 {
 	t_philos	*ph;
-	//int i = 0;
 	
 	ph = (t_philos *)pointer;
-	
-	//int i = ph->philo_id;
-	printf("el watchel\n");
-	//while (i < ph->c_philo_amount)
+	ft_usleep(2);	
+	while (1)
+	{
+		if (search_deads(ph) == 1)
+			break ;
+	}
 	return (pointer);
 }
 

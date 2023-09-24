@@ -6,7 +6,7 @@
 /*   By: imontero <imontero@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/20 16:03:26 by imontero          #+#    #+#             */
-/*   Updated: 2023/09/22 13:31:37 by imontero         ###   ########.fr       */
+/*   Updated: 2023/09/24 19:46:06 by imontero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,14 +42,13 @@ void	fill_data(int ac, char **av, t_philos *ph, pthread_mutex_t *fork)
 	while (i < ft_atoi(av[1]))
 	{
 		pthread_mutex_init(&fork[i], NULL);
+		ph[i].last_meal = get_current_time();
 		ph[i].c_start_time = get_current_time();
 		ph[i].c_philo_amount = ft_atoi(av[1]);
 		ph[i].c_time_2_die = ft_atoi(av[2]);
 		ph[i].c_time_2_eat = ft_atoi(av[3]);
 		ph[i].c_time_2_slp = ft_atoi(av[4]);
 		ph[i].philo_id = i;
-		ph[i].meals = 0;
-		ph[i].dead_flag = ALIVE;
 		if (ac == 6)
 			ph[i].c_max_meals = ft_atoi(av[5]);
 		ph[i].fork_l = &fork[i];
@@ -70,7 +69,9 @@ int	main(int ac, char **av)
 		return(printf("Invalid argument number\n"), -1);
 	if (check_args(av))
 		return(printf("Invalid arguments\n"), -1);
-	printf("todo ok, payaso\n");
+	ft_memset(&ph, 0, sizeof(struct s_philos));
+	//printf("%zu\n", ph[0].last_meal);
+	//printf("%i\n", ph[1].dead_flag);
 	fill_data(ac, av, ph, fork);
 	init_threads(ph, fork);
 	

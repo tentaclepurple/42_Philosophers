@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   routines.c                                         :+:      :+:    :+:   */
+/*   philo_routines.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: imontero <imontero@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 17:32:12 by imontero          #+#    #+#             */
-/*   Updated: 2023/09/24 11:40:10 by imontero         ###   ########.fr       */
+/*   Updated: 2023/09/24 20:52:50 by imontero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,25 +14,42 @@
 
 void	ft_eat(t_philos *ph)
 {
+	printf("%zu id: %i, endflg: %i\n", get_current_time() -  ph->c_start_time, ph->philo_id, ph->ending_flag);
+/*	if (ph->ending_flag == END)
+		return ;*/
 	pthread_mutex_lock(ph->fork_l);
+/*	if (ph->ending_flag == END)
+		return ;*/
 	ft_prints(ph, HASFORK);
 	pthread_mutex_lock(ph->fork_r);
+/*	if (ph->ending_flag == END)
+		return ;*/
 	ft_prints(ph, HASFORK);
-	ft_prints(ph, ISEATING);
+/*	if (ph->ending_flag == END)
+		return ;*/
+	ft_prints(ph, PRNTEAT);
+/*	if (ph->ending_flag == END)
+		return ;*/
+	ph->eating_flag = EATING;
+	ph->meal_number++;
+	ph->last_meal = get_current_time();
+/*	if (ph->ending_flag == END)
+		return ;*/
 	ft_usleep(ph->c_time_2_eat);
+	ph->eating_flag = NOTEATING;
 	pthread_mutex_unlock(ph->fork_l);
 	pthread_mutex_unlock(ph->fork_r);
 }
 
 void	ft_sleep(t_philos *ph)
 {
-	ft_prints(ph, ISSLEEPING);
+	ft_prints(ph, PRNTSLP);
 	ft_usleep(ph->c_time_2_slp);
 }
 
 void	ft_think(t_philos *ph)
 {
-	ft_prints(ph, ISTHINKING);
+	ft_prints(ph, PRNTTHK);
 }
 
 /*void	ft_eat(t_philos *ph)

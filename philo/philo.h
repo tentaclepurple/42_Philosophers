@@ -6,7 +6,7 @@
 /*   By: imontero <imontero@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 16:14:30 by imontero          #+#    #+#             */
-/*   Updated: 2023/09/24 11:39:29 by imontero         ###   ########.fr       */
+/*   Updated: 2023/09/24 19:20:57 by imontero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,7 @@
 # include <sys/time.h>
 # include <unistd.h>
 
-# define PHILMAX 250
-# define HASFORK 0
-# define ISEATING 1
-# define ISSLEEPING 2
-# define ISTHINKING 3
-# define HASDIED 4
-# define ALIVE 0
-# define DEAD 1
+/* COLORS */
 # define RED	"\033[0;31m"
 # define GREEN	"\033[0;32m"
 # define YELLOW	"\033[0;33m"
@@ -36,13 +29,28 @@
 # define BOLD	"\033[0;1m"
 # define X		"\033[0;0m"
 
+/* MACROS */
+# define PHILMAX 250
+# define HASFORK 0
+# define PRNTEAT 1
+# define PRNTSLP 2
+# define PRNTTHK 3
+# define PRNTDIED 4
+# define CONTINUE 0
+# define END 1
+# define EATING	1
+# define NOTEATING 0
+
+
 
 typedef struct s_philos
 {
 	pthread_t		thread;
 	int				philo_id;
-	int				meals;
-	int				dead_flag;
+	int				meal_number;
+	int				ending_flag;
+	int				eating_flag;
+	size_t			last_meal;	
 	pthread_mutex_t	*fork_r;
 	pthread_mutex_t	*fork_l;
 	
@@ -54,23 +62,28 @@ typedef struct s_philos
 	int				c_max_meals;
 	
 	
-	
 }	t_philos;
 
 void	fill_data(int ac, char **av, t_philos *ph, pthread_mutex_t *fork);
 void	init_threads(t_philos *ph, pthread_mutex_t *fork);
-void	*philo_routine(void *pointer);
-void	*watcher_routine(void *pointer);
 void	destroy_mutex(char *s, t_philos *ph, pthread_mutex_t *fork);
+int		check_args(char **av);
+
+/* ROUTINES */
+void	*philo_routine(void *pointer);
+void	ft_eat(t_philos *ph);
+void	ft_sleep(t_philos *ph);
+void	ft_think(t_philos *ph);
+void	*watcher_routine(void *pointer);
+int		search_deads(t_philos *ph);
+void	ft_ending(t_philos *ph);
+
+/* UTILS */
 int		ft_usleep(size_t milliseconds);
 size_t	get_current_time(void);
 int		ft_atoi(const char *str);
 int		ft_isdigit(int c);
 void	ft_prints(t_philos *ph, int i);
-int		check_args(char **av);
-void	ft_eat(t_philos *ph);
-void	ft_sleep(t_philos *ph);
-void	ft_think(t_philos *ph);
-
+void	*ft_memset(void *ptr, int c, size_t n);
 
 #endif
