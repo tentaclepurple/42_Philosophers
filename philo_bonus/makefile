@@ -6,7 +6,7 @@
 #    By: imontero <imontero@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/21 16:14:07 by imontero          #+#    #+#              #
-#    Updated: 2023/09/28 19:45:24 by imontero         ###   ########.fr        #
+#    Updated: 2023/09/29 17:03:31 by imontero         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME = 				philo_bonus
 
 CC = 				gcc
 
-CFLAGS =			-g3 -Wall -Werror -Wextra -fsanitize=address 
+CFLAGS =			-g3 -Wall -Werror -Wextra #-fsanitize=address 
 #CFLAGS =			-g3 -Wall -Werror -Wextra -fsanitize=thread
 
 SRC_FILES =			philo_bonus.c \

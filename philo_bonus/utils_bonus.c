@@ -6,7 +6,7 @@
 /*   By: imontero <imontero@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 16:14:14 by imontero          #+#    #+#             */
-/*   Updated: 2023/09/28 19:36:19 by imontero         ###   ########.fr       */
+/*   Updated: 2023/09/29 17:03:40 by imontero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,20 +69,3 @@ int	ft_isdigit(int c)
 	else
 		return (0);
 }
-
-/*void	destroy_mutex(char *s, t_philos *ph, pthread_mutex_t *fork)
-{
-	int	i;
-
-	i = 0;
-	printf("%s", s);
-	while (i < ph[0].c_philo_amount)
-	{
-		pthread_mutex_destroy(&fork[i]);
-		i++;
-	}
-	pthread_mutex_destroy(&ph[0].common->prnt);
-	pthread_mutex_destroy(&ph[0].common->eat);
-	pthread_mutex_destroy(&ph[0].common->end);
-}
-*/

@@ -6,42 +6,44 @@
 /*   By: imontero <imontero@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/22 12:46:12 by imontero          #+#    #+#             */
-/*   Updated: 2023/09/28 19:30:11 by imontero         ###   ########.fr       */
+/*   Updated: 2023/09/29 17:18:10 by imontero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
-/*void	ft_prints(t_philos *ph, int i)
+void	ft_prints(t_philos *ph, char *str)
 {
-	size_t			time;
-
-	pthread_mutex_lock(&ph->common->prnt);
-	time = get_current_time() -  ph->c_start_time;
-	if (i == PRNTDIED)
-		printf("%s%7zu%s %s%3i%s %s\n", CYAN, time, X, BOLD, ph->philo_id + 1,
-			RED, "died");
-	if (check_end(ph) == END)
-	{
-		pthread_mutex_unlock(&ph->common->prnt);
-		return ;
-	}
-	ft_prints_aux(ph, i, time);
-	pthread_mutex_unlock(&ph->common->prnt);
+	sem_wait(ph->sem_prints);
+	if (ph->ending_flag == CONTINUE)
+		printf("%zu %d %s\n", get_current_time() - ph->start_time, ph->philo_id + 1, str);
+	sem_post(ph->sem_prints);
 }
 
-void	ft_prints_aux(t_philos *ph, int i, size_t time)
+int	check_args(char **av)
 {
-	if (i == HASFORK)
-		printf("%s%7zu%s %s%3i%s %s\n", CYAN, time, X, BOLD, ph->philo_id + 1,
-			X, "has taken a fork");
-	else if (i == PRNTEAT)
-		printf("%s%7zu%s %s%3i%s %s\n", CYAN, time, X, BOLD, ph->philo_id + 1,
-			GREEN, "is eating");
-	else if (i == PRNTSLP)
-		printf("%s%7zu%s %s%3i%s %s\n", CYAN, time, X, BOLD, ph->philo_id + 1,
-			X, "is sleeping");
-	else if (i == PRNTTHK)
-		printf("%s%7zu%s %s%3i%s %s\n", CYAN, time, X, BOLD, ph->philo_id + 1,
-			X, "is thinking");
-}*/
+	int	i;
+	int	j;
+
+	i = 1;
+	while (av[i])
+	{
+		j = 0;
+		while (av[i][j])
+		{
+			if (!ft_isdigit(av[i][j]) || ft_atoi(av[i]) <= 0)
+				return (-1);
+			j++;
+		}
+		i++;
+	}
+	if (ft_atoi(av[1]) > PHILMAX)
+		return (-1);
+	return (0);
+}
+
+void	ft_error_exit(char *str)
+{
+	printf("%s\n", str);
+	exit (-1);
+}

@@ -6,7 +6,7 @@
 /*   By: imontero <imontero@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 16:14:30 by imontero          #+#    #+#             */
-/*   Updated: 2023/09/29 13:33:18 by imontero         ###   ########.fr       */
+/*   Updated: 2023/09/29 18:57:12 by imontero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ typedef struct s_philos
 	sem_t			*sem_forks;
 	int				ending_flag;
 	int				eating_flag;
+	int				dead_flag;
 	int				philo_amount;
 	size_t			start_time;
 	size_t			time_2_die;
@@ -71,6 +72,7 @@ void	init_philos(t_philos *ph);
 void	*watcher_routine(void *pointer);
 void	fill_data(int ac, char **av, t_philos *ph);
 void	init_threads(t_philos *ph, pthread_mutex_t *fork);
+void	exit_philo(t_philos *ph);
 
 /* UTILS */
 void	ft_error_exit(char *s);
@@ -78,7 +80,7 @@ int		ft_usleep(size_t milliseconds);
 size_t	get_current_time(void);
 int		ft_atoi(const char *str);
 int		ft_isdigit(int c);
-void	ft_prints(t_philos *ph, char *str)
+void	ft_prints(t_philos *ph, char *str);
 void	*ft_memset(void *ptr, int c, size_t n);
 
 #endif
