@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils2.c                                           :+:      :+:    :+:   */
+/*   utils2_bonus.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: imontero <imontero@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/22 12:46:12 by imontero          #+#    #+#             */
-/*   Updated: 2023/09/27 13:03:13 by imontero         ###   ########.fr       */
+/*   Updated: 2023/09/28 19:30:11 by imontero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "philo_bonus.h"
 
-void	ft_prints(t_philos *ph, int i)
+/*void	ft_prints(t_philos *ph, int i)
 {
 	size_t			time;
 
@@ -44,4 +44,4 @@ void	ft_prints_aux(t_philos *ph, int i, size_t time)
 	else if (i == PRNTTHK)
 		printf("%s%7zu%s %s%3i%s %s\n", CYAN, time, X, BOLD, ph->philo_id + 1,
 			X, "is thinking");
-}
+}*/

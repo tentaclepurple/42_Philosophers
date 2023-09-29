@@ -14,7 +14,7 @@ NAME = 				philo
 
 CC = 				gcc
 
-CFLAGS =			-g3 -Wall -Werror -Wextra -fsanitize=address 
+CFLAGS =			-g3 -Wall -Werror -Wextra #-fsanitize=address 
 #CFLAGS =			-g3 -Wall -Werror -Wextra -fsanitize=thread
 
 SRC_FILES =			philo.c \

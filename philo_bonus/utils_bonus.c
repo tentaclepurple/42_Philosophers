@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   utils_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: imontero <imontero@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 16:14:14 by imontero          #+#    #+#             */
-/*   Updated: 2023/09/29 10:46:21 by imontero         ###   ########.fr       */
+/*   Updated: 2023/09/28 19:36:19 by imontero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "philo_bonus.h"
 
 int	ft_usleep(size_t milliseconds)
 {
@@ -70,8 +70,19 @@ int	ft_isdigit(int c)
 		return (0);
 }
 
-void	ft_error_exit(char *s)
+/*void	destroy_mutex(char *s, t_philos *ph, pthread_mutex_t *fork)
 {
-	printf("%s\n", s);
-	exit(-1);
+	int	i;
+
+	i = 0;
+	printf("%s", s);
+	while (i < ph[0].c_philo_amount)
+	{
+		pthread_mutex_destroy(&fork[i]);
+		i++;
+	}
+	pthread_mutex_destroy(&ph[0].common->prnt);
+	pthread_mutex_destroy(&ph[0].common->eat);
+	pthread_mutex_destroy(&ph[0].common->end);
 }
+*/
