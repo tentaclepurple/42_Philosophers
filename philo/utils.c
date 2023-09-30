@@ -70,8 +70,15 @@ int	ft_isdigit(int c)
 		return (0);
 }
 
-void	ft_error_exit(char *s)
+void	destroy_mutex(char *s, t_philos *ph, pthread_mutex_t *fork)
 {
+	int	i;
+
+	i = 0;
 	printf("%s\n", s);
-	exit(-1);
+	while (i < ph[0].c_philo_amount)
+	{
+		pthread_mutex_destroy(&fork[i]);
+		i++;
+	}
 }

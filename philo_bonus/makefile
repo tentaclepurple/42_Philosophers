@@ -14,8 +14,8 @@ NAME = 				philo_bonus
 
 CC = 				gcc
 
-CFLAGS =			-g3 -Wall -Werror -Wextra #-fsanitize=address 
-#CFLAGS =			-g3 -Wall -Werror -Wextra -fsanitize=thread
+#CFLAGS =			-g3 -Wall -Werror -Wextra #-fsanitize=address 
+CFLAGS =			-g3 -Wall -Werror -Wextra -fsanitize=thread
 
 SRC_FILES =			philo_bonus.c \
 					utils_bonus.c \

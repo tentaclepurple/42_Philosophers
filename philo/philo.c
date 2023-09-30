@@ -81,7 +81,6 @@ int	main(int ac, char **av)
 	pthread_mutex_t	fork[PHILMAX];
 	t_common		com;
 
-	//com = malloc(sizeof(t_common));
 	if (ac < 5 || ac > 6)
 		return (printf("Invalid argument number\n"), -1);
 	if (check_args(av))
@@ -99,6 +98,5 @@ int	main(int ac, char **av)
 	}
 	init_threads(ph, fork);
 	destroy_mutex("", ph, fork);
-	//free(com);
 	return (0);
 }

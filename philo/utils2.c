@@ -17,7 +17,7 @@ void	ft_prints(t_philos *ph, int i)
 	size_t			time;
 
 	pthread_mutex_lock(&ph->common->prnt);
-	time = get_current_time() -  ph->c_start_time;
+	time = get_current_time() - ph->c_start_time;
 	if (i == PRNTDIED)
 		printf("%s%7zu%s %s%3i%s %s\n", CYAN, time, X, BOLD, ph->philo_id + 1,
 			RED, "died");

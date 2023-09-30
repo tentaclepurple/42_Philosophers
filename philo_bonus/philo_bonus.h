@@ -21,6 +21,9 @@
 # include <signal.h>
 # include <unistd.h>
 # include <semaphore.h>
+# include <fcntl.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 /* COLORS */
 # define RED	"\033[0;31m"
@@ -51,6 +54,8 @@ typedef struct s_philos
 	int				meal_number;
 	size_t			last_meal;	
 	int				pid[PHILMAX];
+	sem_t			*sem_meals;
+	sem_t			*sem_lmeal;
 	sem_t			*sem_prints;
 	sem_t			*sem_forks;
 	int				ending_flag;

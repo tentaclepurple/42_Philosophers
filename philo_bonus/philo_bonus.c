@@ -31,10 +31,15 @@ void	fill_data(int ac, char **av, t_philos *ph)
 	}
 	sem_unlink("/sem_prints");
 	sem_unlink("/sem_forks");
+	sem_unlink("/sem_meals");
+	sem_unlink("/sem_lmeal");
 	ph->sem_prints = sem_open("/sem_prints", O_CREAT, 0644, 1);
 	ph->sem_forks = sem_open("/sem_forks", O_CREAT, 0644, ph[0].philo_amount);
-	if (ph->sem_prints <= 0 || ph->sem_forks <= 0)
-		ft_error_exit("Error: semaphore open error");	
+	ph->sem_meals = sem_open("/sem_meals", O_CREAT, 0644, 1);
+	ph->sem_meals = sem_open("/sem_lmeal", O_CREAT, 0644, 1);
+
+	//if (ph->sem_prints <= 0 || ph->sem_forks <= 0)
+	//	ft_error_exit("Semaphore open error");	
 }
 
 void	*watcher_routine(void *pointer)
@@ -44,20 +49,26 @@ void	*watcher_routine(void *pointer)
 	ph = (t_philos *)pointer;
 	while (ph->ending_flag == CONTINUE)
 	{
-		usleep(100);
+		ft_usleep(1);
+		//sem_wait(ph->sem_lmeal);
 		if(get_current_time() - ph->last_meal >= ph->time_2_die)
 		{
 			ph->dead_flag = END;
-			sem_wait(ph->sem_prints);
-			printf("%zu %i %s\n", get_current_time() - ph->start_time, ph->philo_id, "died");
+			//sem_wait(ph->sem_prints);
+			printf("%zu %i %s\n", get_current_time() - ph->start_time, ph->philo_id + 1, "died");
 			ph->ending_flag = END;
+			sem_post(ph->sem_lmeal);
 			break ;
 		}
+		sem_wait(ph->sem_meals);
 		if (ph->max_meals != 0 && ph->meal_number >= ph->max_meals)
 		{
+			sem_post(ph->sem_meals);
 			ph->ending_flag = END;
 			break;
 		}
+		sem_post(ph->sem_lmeal);
+		sem_post(ph->sem_meals);
 	}
 	if (ph->dead_flag)
 		exit (1);
@@ -69,8 +80,8 @@ void	init_philos(t_philos *ph)
 {
 	if (pthread_create(&ph->thread, NULL, &watcher_routine, ph))
 		ft_error_exit("Thread error");
-	if (ph->philo_id % 2 != 0)
-		usleep(1000);
+	if (ph->philo_id % 2 == 0)
+		usleep(1);
 	while (1)
 	{
 		sem_wait(ph->sem_forks);
@@ -79,10 +90,14 @@ void	init_philos(t_philos *ph)
 		ft_prints(ph, "has taken a fork");
 		ft_prints(ph, "is eating");
 		ft_usleep(ph->time_2_eat);
+		sem_wait(ph->sem_lmeal);
 		ph->last_meal = get_current_time();
 		sem_post(ph->sem_forks);
 		sem_post(ph->sem_forks);
+		sem_post(ph->sem_lmeal);
+		sem_wait(ph->sem_meals);
 		ph->meal_number++;
+		sem_post(ph->sem_meals);
 		ft_prints(ph, "is sleeping");
 		ft_usleep(ph->time_2_slp);
 		ft_prints(ph, "is thinking");
@@ -109,6 +124,8 @@ void	exit_philo(t_philos *ph)
 		}
 		i++;
 	}
+	sem_close(ph->sem_meals);
+	sem_close(ph->sem_lmeal);
 	sem_close(ph->sem_prints);
 	sem_close(ph->sem_forks);
 	sem_unlink("/sem_prints");
@@ -127,11 +144,11 @@ int	main(int ac, char **av)
 	memset(&ph, 0, sizeof(t_philos));
 	fill_data(ac, av, ph);
 	i = 0;
-	printf("ph_am: %i, max_meals: %i, ph_id: %i\n", ph[0].philo_amount, ph[0].max_meals, ph[0].philo_id);
+	//printf("ph_am: %i, max_meals: %i, ph_id: %i\n", ph[0].philo_amount, ph[0].max_meals, ph[0].philo_id);
 	while (i < ph[0].philo_amount)
 	{
 		ph->pid[i] = fork();
-		printf("%i\n", ph->pid[i]);
+		//printf("%i\n", ph->pid[i]);
 		if (ph->pid[i] == -1)
 			ft_error_exit("Fork error");
 		if (ph->pid[i] == 0)
@@ -142,5 +159,6 @@ int	main(int ac, char **av)
 		}
 		i++;
 	}
+	exit_philo(ph);
 	return (0);
 }
