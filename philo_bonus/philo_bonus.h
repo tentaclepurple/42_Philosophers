@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PHILO_H
-# define PHILO_H
+#ifndef PHILO_BONUS_H
+# define PHILO_BONUS_H
 
 # include <pthread.h>
 # include <stdio.h>
@@ -22,8 +22,8 @@
 # include <unistd.h>
 # include <semaphore.h>
 # include <fcntl.h>
-#include <sys/types.h>
-#include <sys/wait.h>
+# include <sys/types.h>
+# include <sys/wait.h>
 
 /* COLORS */
 # define RED	"\033[0;31m"
@@ -56,6 +56,7 @@ typedef struct s_philos
 	int				pid[PHILMAX];
 	sem_t			*sem_meals;
 	sem_t			*sem_lmeal;
+	sem_t			*sem_end;
 	sem_t			*sem_prints;
 	sem_t			*sem_forks;
 	int				ending_flag;
@@ -67,9 +68,7 @@ typedef struct s_philos
 	size_t			time_2_eat;
 	size_t			time_2_slp;
 	int				max_meals;
-
 }					t_philos;
-
 
 /* PROGRAM */
 int		check_args(char **av);
@@ -78,14 +77,18 @@ void	*watcher_routine(void *pointer);
 void	fill_data(int ac, char **av, t_philos *ph);
 void	init_threads(t_philos *ph, pthread_mutex_t *fork);
 void	exit_philo(t_philos *ph);
+void	ft_prints(t_philos *ph, char *str);
+void	ft_error_exit(char *s);
+int		check_dead(t_philos *ph);
+void	open_close_sems(t_philos *ph, int i);
+void	eating_aux(t_philos *ph);
+void	one_died(t_philos *ph);
 
 /* UTILS */
-void	ft_error_exit(char *s);
-int		ft_usleep(size_t milliseconds);
+void	ft_usleep(size_t time, t_philos *ph);
 size_t	get_current_time(void);
 int		ft_atoi(const char *str);
 int		ft_isdigit(int c);
-void	ft_prints(t_philos *ph, char *str);
 void	*ft_memset(void *ptr, int c, size_t n);
 
 #endif

@@ -12,14 +12,26 @@
 
 #include "philo_bonus.h"
 
-int	ft_usleep(size_t milliseconds)
+/* void	ft_usleep(size_t time, t_philos *ph)
+{
+	size_t	t;
+
+	t = get_current_time();
+	while (!ph->ending_flag)
+	{
+		if (get_current_time() - t >= time)
+			break ;
+		usleep(500);
+	}
+} */
+void	ft_usleep(size_t milliseconds, t_philos *ph)
 {
 	size_t	start;
 
+	(void)ph;
 	start = get_current_time();
 	while ((get_current_time() - start) < milliseconds)
 		usleep(500);
-	return (0);
 }
 
 size_t	get_current_time(void)

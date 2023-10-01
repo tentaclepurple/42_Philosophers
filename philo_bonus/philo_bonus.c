@@ -19,25 +19,17 @@ void	fill_data(int ac, char **av, t_philos *ph)
 	i = 0;
 	while (i < ft_atoi(av[1]))
 	{
-		ph[i].last_meal = get_current_time();
-		ph[0].start_time = get_current_time();
-		ph[0].philo_amount = ft_atoi(av[1]);
-		ph[0].time_2_die = ft_atoi(av[2]);
-		ph[0].time_2_eat = ft_atoi(av[3]);
-		ph[0].time_2_slp = ft_atoi(av[4]);
+		ph->last_meal = get_current_time();
+		ph->start_time = get_current_time();
+		ph->philo_amount = ft_atoi(av[1]);
+		ph->time_2_die = ft_atoi(av[2]);
+		ph->time_2_eat = ft_atoi(av[3]);
+		ph->time_2_slp = ft_atoi(av[4]);
 		if (ac == 6)
-			ph[0].max_meals = ft_atoi(av[5]);
+			ph->max_meals = ft_atoi(av[5]);
 		i++;
 	}
-	sem_unlink("/sem_prints");
-	sem_unlink("/sem_forks");
-	sem_unlink("/sem_meals");
-	sem_unlink("/sem_lmeal");
-	ph->sem_prints = sem_open("/sem_prints", O_CREAT, 0644, 1);
-	ph->sem_forks = sem_open("/sem_forks", O_CREAT, 0644, ph[0].philo_amount);
-	ph->sem_meals = sem_open("/sem_meals", O_CREAT, 0644, 1);
-	ph->sem_meals = sem_open("/sem_lmeal", O_CREAT, 0644, 1);
-
+	open_close_sems(ph, 1);
 	//if (ph->sem_prints <= 0 || ph->sem_forks <= 0)
 	//	ft_error_exit("Semaphore open error");	
 }
@@ -45,29 +37,25 @@ void	fill_data(int ac, char **av, t_philos *ph)
 void	*watcher_routine(void *pointer)
 {
 	t_philos	*ph;
-	
+
 	ph = (t_philos *)pointer;
 	while (ph->ending_flag == CONTINUE)
 	{
-		ft_usleep(1);
-		//sem_wait(ph->sem_lmeal);
-		if(get_current_time() - ph->last_meal >= ph->time_2_die)
+		//usleep(100);
+		if (check_dead(ph))
 		{
-			ph->dead_flag = END;
-			//sem_wait(ph->sem_prints);
-			printf("%zu %i %s\n", get_current_time() - ph->start_time, ph->philo_id + 1, "died");
-			ph->ending_flag = END;
-			sem_post(ph->sem_lmeal);
+			one_died(ph);
 			break ;
 		}
 		sem_wait(ph->sem_meals);
 		if (ph->max_meals != 0 && ph->meal_number >= ph->max_meals)
 		{
-			sem_post(ph->sem_meals);
+			sem_wait(ph->sem_end);
 			ph->ending_flag = END;
-			break;
+			sem_post(ph->sem_meals);
+			sem_post(ph->sem_end);
+			break ;
 		}
-		sem_post(ph->sem_lmeal);
 		sem_post(ph->sem_meals);
 	}
 	if (ph->dead_flag)
@@ -80,26 +68,13 @@ void	init_philos(t_philos *ph)
 {
 	if (pthread_create(&ph->thread, NULL, &watcher_routine, ph))
 		ft_error_exit("Thread error");
-	if (ph->philo_id % 2 == 0)
-		usleep(1);
+	if (ph->philo_id % 2 != 0)
+		usleep(1000);
 	while (1)
 	{
-		sem_wait(ph->sem_forks);
-		ft_prints(ph, "has taken a fork");
-		sem_wait(ph->sem_forks);
-		ft_prints(ph, "has taken a fork");
-		ft_prints(ph, "is eating");
-		ft_usleep(ph->time_2_eat);
-		sem_wait(ph->sem_lmeal);
-		ph->last_meal = get_current_time();
-		sem_post(ph->sem_forks);
-		sem_post(ph->sem_forks);
-		sem_post(ph->sem_lmeal);
-		sem_wait(ph->sem_meals);
-		ph->meal_number++;
-		sem_post(ph->sem_meals);
+		eating_aux(ph);
 		ft_prints(ph, "is sleeping");
-		ft_usleep(ph->time_2_slp);
+		ft_usleep(ph->time_2_slp, ph);
 		ft_prints(ph, "is thinking");
 	}
 	if (pthread_join(ph->thread, NULL))
@@ -124,17 +99,12 @@ void	exit_philo(t_philos *ph)
 		}
 		i++;
 	}
-	sem_close(ph->sem_meals);
-	sem_close(ph->sem_lmeal);
-	sem_close(ph->sem_prints);
-	sem_close(ph->sem_forks);
-	sem_unlink("/sem_prints");
-	sem_unlink("/sem_forks");
+	open_close_sems(ph, 0);
 }
 
 int	main(int ac, char **av)
 {
-	t_philos	ph[PHILMAX];
+	t_philos	ph;
 	int			i;
 
 	if (ac < 5 || ac > 6)
@@ -142,23 +112,21 @@ int	main(int ac, char **av)
 	if (check_args(av))
 		return (printf("Invalid arguments\n"), -1);
 	memset(&ph, 0, sizeof(t_philos));
-	fill_data(ac, av, ph);
+	fill_data(ac, av, &ph);
 	i = 0;
-	//printf("ph_am: %i, max_meals: %i, ph_id: %i\n", ph[0].philo_amount, ph[0].max_meals, ph[0].philo_id);
-	while (i < ph[0].philo_amount)
+	while (i < ph.philo_amount)
 	{
-		ph->pid[i] = fork();
-		//printf("%i\n", ph->pid[i]);
-		if (ph->pid[i] == -1)
+		ph.pid[i] = fork();
+		if (ph.pid[i] == -1)
 			ft_error_exit("Fork error");
-		if (ph->pid[i] == 0)
+		if (ph.pid[i] == 0)
 		{
-			ph->philo_id = i;
-			ph->last_meal = get_current_time();
-			init_philos(ph);
+			ph.philo_id = i;
+			ph.last_meal = get_current_time();
+			init_philos(&ph);
 		}
 		i++;
 	}
-	exit_philo(ph);
+	exit_philo(&ph);
 	return (0);
 }

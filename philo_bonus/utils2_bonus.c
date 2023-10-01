@@ -15,8 +15,11 @@
 void	ft_prints(t_philos *ph, char *str)
 {
 	sem_wait(ph->sem_prints);
+	sem_wait(ph->sem_end);
 	if (ph->ending_flag == CONTINUE)
-		printf("%zu %d %s\n", get_current_time() - ph->start_time, ph->philo_id + 1, str);
+		printf("%s%7zu%s %s%3i%s %s\n", CYAN, get_current_time() \
+			- ph->start_time, X, BOLD, ph->philo_id + 1, X, str);
+	sem_post(ph->sem_end);
 	sem_post(ph->sem_prints);
 }
 
