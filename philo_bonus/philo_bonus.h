@@ -1,24 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo.h                                            :+:      :+:    :+:   */
+/*   philo_bonus.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: imontero <imontero@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 16:14:30 by imontero          #+#    #+#             */
-/*   Updated: 2023/09/27 11:50:07 by imontero         ###   ########.fr       */
+/*   Updated: 2023/09/29 18:57:12 by imontero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PHILO_H
-# define PHILO_H
+#ifndef PHILO_BONUS_H
+# define PHILO_BONUS_H
 
 # include <pthread.h>
 # include <stdio.h>
 # include <string.h>
 # include <stdlib.h>
 # include <sys/time.h>
+# include <signal.h>
 # include <unistd.h>
+# include <semaphore.h>
+# include <fcntl.h>
+# include <sys/types.h>
+# include <sys/wait.h>
 
 /* COLORS */
 # define RED	"\033[0;31m"
@@ -42,56 +47,48 @@
 # define EATING	1
 # define NOTEATING 0
 
-typedef struct s_common
-{
-	pthread_mutex_t	prnt;
-	pthread_mutex_t	eat;
-	pthread_mutex_t	end;
-}					t_common;
-
 typedef struct s_philos
 {
 	pthread_t		thread;
 	int				philo_id;
 	int				meal_number;
+	size_t			last_meal;	
+	int				pid[PHILMAX];
+	sem_t			*sem_meals;
+	sem_t			*sem_lmeal;
+	sem_t			*sem_end;
+	sem_t			*sem_prints;
+	sem_t			*sem_forks;
 	int				ending_flag;
 	int				eating_flag;
-	size_t			last_meal;	
-	pthread_mutex_t	*fork_r;
-	pthread_mutex_t	*fork_l;
-	int				c_philo_amount;
-	size_t			c_start_time;
-	size_t			c_time_2_die;
-	size_t			c_time_2_eat;
-	size_t			c_time_2_slp;
-	int				c_max_meals;
-	t_common		*common;
+	int				dead_flag;
+	int				philo_amount;
+	size_t			start_time;
+	size_t			time_2_die;
+	size_t			time_2_eat;
+	size_t			time_2_slp;
+	int				max_meals;
 }					t_philos;
 
-void	fill_data(int ac, char **av, t_philos *ph, pthread_mutex_t *fork);
-void	init_threads(t_philos *ph, pthread_mutex_t *fork);
-void	fill_mutex(t_philos *ph, t_common *com);
-void	destroy_mutex(char *s, t_philos *ph, pthread_mutex_t *fork);
+/* PROGRAM */
 int		check_args(char **av);
-
-/* ROUTINES */
-void	*philo_routine(void *pointer);
-void	ft_eat(t_philos *ph);
-void	ft_sleep(t_philos *ph);
-void	ft_think(t_philos *ph);
+void	init_philos(t_philos *ph);
 void	*watcher_routine(void *pointer);
-int		check_end(t_philos *ph);
-int		search_deads(t_philos *ph);
-int		check_every1_ate(t_philos *ph);
-void	ft_ending(t_philos *ph);
+void	fill_data(int ac, char **av, t_philos *ph);
+void	init_threads(t_philos *ph, pthread_mutex_t *fork);
+void	exit_philo(t_philos *ph);
+void	ft_prints(t_philos *ph, char *str);
+void	ft_error_exit(char *s);
+int		check_dead(t_philos *ph);
+void	open_close_sems(t_philos *ph, int i);
+void	eating_aux(t_philos *ph);
+void	one_died(t_philos *ph);
 
 /* UTILS */
-int		ft_usleep(size_t milliseconds);
+void	ft_usleep(size_t time, t_philos *ph);
 size_t	get_current_time(void);
 int		ft_atoi(const char *str);
 int		ft_isdigit(int c);
-void	ft_prints(t_philos *ph, int i);
-void	ft_prints_aux(t_philos *ph, int i, size_t time);
 void	*ft_memset(void *ptr, int c, size_t n);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: imontero <imontero@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/20 16:03:26 by imontero          #+#    #+#             */
-/*   Updated: 2023/09/22 13:31:37 by imontero         ###   ########.fr       */
+/*   Updated: 2023/09/27 13:05:31 by imontero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 int	check_args(char **av)
 {
 	int	i;
-	int j;
-	
+	int	j;
+
 	i = 1;
 	while (av[i])
 	{
@@ -42,14 +42,13 @@ void	fill_data(int ac, char **av, t_philos *ph, pthread_mutex_t *fork)
 	while (i < ft_atoi(av[1]))
 	{
 		pthread_mutex_init(&fork[i], NULL);
+		ph[i].last_meal = get_current_time();
 		ph[i].c_start_time = get_current_time();
 		ph[i].c_philo_amount = ft_atoi(av[1]);
 		ph[i].c_time_2_die = ft_atoi(av[2]);
 		ph[i].c_time_2_eat = ft_atoi(av[3]);
 		ph[i].c_time_2_slp = ft_atoi(av[4]);
 		ph[i].philo_id = i;
-		ph[i].meals = 0;
-		ph[i].dead_flag = ALIVE;
 		if (ac == 6)
 			ph[i].c_max_meals = ft_atoi(av[5]);
 		ph[i].fork_l = &fork[i];
@@ -61,28 +60,43 @@ void	fill_data(int ac, char **av, t_philos *ph, pthread_mutex_t *fork)
 	}	
 }
 
-int	main(int ac, char **av)
+void	fill_mutex(t_philos *ph, t_common *com)
 {
-	t_philos	ph[PHILMAX];
-	pthread_mutex_t	fork[PHILMAX];
+	int	i;
 
-	if (ac < 5 || ac > 6)
-		return(printf("Invalid argument number\n"), -1);
-	if (check_args(av))
-		return(printf("Invalid arguments\n"), -1);
-	printf("todo ok, payaso\n");
-	fill_data(ac, av, ph, fork);
-	init_threads(ph, fork);
-	
-
-	return (0);
+	i = 0;
+	pthread_mutex_init(&com->prnt, NULL);
+	pthread_mutex_init(&com->eat, NULL);
+	pthread_mutex_init(&com->end, NULL);
+	while (i < ph[i].c_philo_amount)
+	{
+		ph[i].common = com;
+		i++;
+	}
 }
 
+int	main(int ac, char **av)
+{
+	t_philos		ph[PHILMAX];
+	pthread_mutex_t	fork[PHILMAX];
+	t_common		com;
 
-	/*while (i < ph[0].c_philo_amount)
+	if (ac < 5 || ac > 6)
+		return (printf("Invalid argument number\n"), -1);
+	if (check_args(av))
+		return (printf("Invalid arguments\n"), -1);
+	memset(&ph, 0, sizeof(t_philos));
+	memset(&com, 0, sizeof(t_common));
+	fill_data(ac, av, ph, fork);
+	fill_mutex(ph, &com);
+	if (ph[0].c_philo_amount == 1)
 	{
-		printf(" i: %i\n id: %i\n meals: %i\n d_flag: %i\n philo_amount: %i\n start_time: %zu\n time2d: %zu\n time2e: %zu\n time2s: %zu\n maxmeals: %i\n\n\n"\
-		, i, ph[i].philo_id, ph[i].meals, ph[i].dead_flag, ph[i].c_philo_amount, ph[i].c_start_time, ph[i].c_time_2_die, \
-		ph[i].c_time_2_eat, ph[i].c_time_2_slp, ph[i].c_max_meals);
-		i++;
-	}*/
+		ft_prints(&ph[0], HASFORK);
+		ft_usleep(ph[0].c_time_2_die);
+		ft_prints(&ph[0], PRNTDIED);
+		return (0);
+	}
+	init_threads(ph, fork);
+	destroy_mutex("", ph, fork);
+	return (0);
+}

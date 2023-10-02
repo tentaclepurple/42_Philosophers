@@ -1,30 +1,28 @@
 # **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
+#    makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
 #    By: imontero <imontero@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/21 16:14:07 by imontero          #+#    #+#              #
-#    Updated: 2023/09/08 13:26:44 by imontero         ###   ########.fr        #
+#    Updated: 2023/09/29 17:03:31 by imontero         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = 				philo
+NAME = 				philo_bonus
 
 CC = 				gcc
 
 CFLAGS =			-g3 -Wall -Werror -Wextra #-fsanitize=address 
 #CFLAGS =			-g3 -Wall -Werror -Wextra -fsanitize=thread
 
-SRC_FILES =			philo.c \
-					threads.c \
-			 		utils.c \
-					utils2.c \
-					philo_routines.c \
-					watcher_routines.c \
+SRC_FILES =			philo_bonus.c \
+					utils_bonus.c \
+					utils2_bonus.c \
+					aux_bonus.c	
 		
-INCLUDE = 			philo.h
+INCLUDE = 			philo_bonus.h
 
 #.c.o: $(SRCS)
 #	$(CC) $(CFLAGS) $(SRCS) -c $(OBJS) -o
@@ -44,8 +42,12 @@ $(YELLOW)
 ( (| |) )| |   / /\ \ | | | | > > | | | |( (| |) )| | | || | 
  \_   _/ | |  / /  \ \| |_| |/ /__| |_| | \_   _/ | |_| || | 
    |_|  (___)/_/    \_\\___//_____)\___/    |_|    \___/(___)
-                                                             
-                                                             
+$(BLUE)                                                             
+							 ______  _____  ____   _  __   _  ______  
+							|      >/     \|    \ | ||  | | ||   ___| 	
+							|     < |     ||     \| ||  |_| | `-.`-.  
+							|______>\_____/|__/\____||______||______| 
+                                                                                       
  $(CLR_RMV)
 endef
 export	ART

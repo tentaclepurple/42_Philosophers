@@ -1,25 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   utils_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: imontero <imontero@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 16:14:14 by imontero          #+#    #+#             */
-/*   Updated: 2023/09/29 10:46:21 by imontero         ###   ########.fr       */
+/*   Updated: 2023/09/29 17:03:40 by imontero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "philo_bonus.h"
 
-int	ft_usleep(size_t milliseconds)
+/* void	ft_usleep(size_t time, t_philos *ph)
+{
+	size_t	t;
+
+	t = get_current_time();
+	while (!ph->ending_flag)
+	{
+		if (get_current_time() - t >= time)
+			break ;
+		usleep(500);
+	}
+} */
+void	ft_usleep(size_t milliseconds, t_philos *ph)
 {
 	size_t	start;
 
+	(void)ph;
 	start = get_current_time();
 	while ((get_current_time() - start) < milliseconds)
 		usleep(500);
-	return (0);
 }
 
 size_t	get_current_time(void)
@@ -68,17 +80,4 @@ int	ft_isdigit(int c)
 		return (1);
 	else
 		return (0);
-}
-
-void	destroy_mutex(char *s, t_philos *ph, pthread_mutex_t *fork)
-{
-	int	i;
-
-	i = 0;
-	printf("%s\n", s);
-	while (i < ph[0].c_philo_amount)
-	{
-		pthread_mutex_destroy(&fork[i]);
-		i++;
-	}
 }
